@@ -3,6 +3,7 @@ using UnityEngine;
 public class CanecaReciclaje : MonoBehaviour
 {
     [Header("Configuración de la Caneca")]
+    public string nombreCaneca = "Caneca de Orgánicos";
     public string tipoPermitido = "Organico";
 
     private bool jugadorCerca = false;
@@ -10,7 +11,6 @@ public class CanecaReciclaje : MonoBehaviour
 
     private void Update()
     {
-        // Solo deposita si el jugador está junto a la caneca y presiona E
         if (jugadorCerca && Input.GetKeyDown(KeyCode.E))
         {
             DepositarEnCaneca();
@@ -23,14 +23,30 @@ public class CanecaReciclaje : MonoBehaviour
         {
             string tipoLimpio = tipoPermitido.Trim();
 
+            // Caso 1: Tiene el residuo correcto para esta caneca
             if (inventarioJugador.TieneResiduo(tipoLimpio))
             {
                 inventarioJugador.DepositarResiduo(tipoLimpio);
-                inventarioJugador.MostrarFeedback("¡CORRECTO!", Color.green);
+
+                // Dispara el aviso verde ¡CORRECTO! +10 y actualiza puntos en UI
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.DepositarResiduo(true);
+                }
             }
+            // Caso 2: Intenta depositar pero no lleva ningún residuo
+            else if (!inventarioJugador.TieneAlgunResiduo())
+            {
+                inventarioJugador.MostrarFeedback("¡NO TIENES RESIDUOS!", Color.yellow);
+            }
+            // Caso 3: Lleva residuos pero ninguno corresponde a esta caneca
             else
             {
-                inventarioJugador.MostrarFeedback("¡INCORRECTO!", Color.red);
+                // Dispara el aviso rojo ¡INCORRECTO! -50 y resta puntos en UI
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.DepositarResiduo(false);
+                }
             }
         }
     }
@@ -41,6 +57,11 @@ public class CanecaReciclaje : MonoBehaviour
         {
             jugadorCerca = true;
             inventarioJugador = other.GetComponent<EcoBotInventario>();
+
+            if (inventarioJugador != null)
+            {
+                inventarioJugador.MostrarFeedback("[" + nombreCaneca + "] Presiona E para depositar", Color.white);
+            }
         }
     }
 

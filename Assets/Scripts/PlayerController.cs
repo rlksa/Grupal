@@ -16,51 +16,86 @@ public class PlayerController : MonoBehaviour
     public float gravedad = -19.62f;
     private Vector3 velocidadVertical;
 
+    [Header("Conexión con Inventario y UI")]
+    public EcoBotInventario inventario;
+    public GameObject[] corazonesUI;   // Arrastra aquí los 3 corazones
+    public GameObject panelInventarioUI; // Arrastra aquí el panel que contiene los 3 slots de abajo
+    public KeyCode teclaInventario = KeyCode.I; // Tecla para abrir y cerrar el inventario
+
     private Animator anim;
     private bool estaMuerto = false;
 
     void Start()
     {
         anim = GetComponentInChildren<Animator>();
+
+        if (controller == null)
+            controller = GetComponent<CharacterController>();
+
+        if (camara == null && Camera.main != null)
+            camara = Camera.main.transform;
+
+        if (inventario == null)
+            inventario = GetComponent<EcoBotInventario>();
+
+        // Si las vidas están en 0 al iniciar, le asigna tantas vidas como corazones asignaste
+        if (inventario != null && inventario.vidasActuales <= 0)
+        {
+            inventario.vidasActuales = corazonesUI.Length > 0 ? corazonesUI.Length : 3;
+        }
+
+        ActualizarCorazonesUI();
+
+        // El inventario inicia oculto
+        if (panelInventarioUI != null)
+        {
+            panelInventarioUI.SetActive(false);
+        }
     }
 
     void Update()
     {
-        // Si el robot muere, se bloquean todos los controles
-        if (estaMuerto) return;
+        if (estaMuerto || controller == null) return;
 
-        // 1. Tecla de prueba para Morir (Tecla K)
+        // Abrir / Cerrar el inventario
+        if (Input.GetKeyDown(teclaInventario))
+        {
+            ToggleInventario();
+        }
+
+        // Teclas de prueba (L = Recibir Daño, K = Morir al instante)
         if (Input.GetKeyDown(KeyCode.K))
         {
             Morir();
             return;
         }
 
-        // 2. Detección de Suelo
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            RecibirDano(1);
+        }
+
+        // Movimiento y Física
         if (controller.isGrounded && velocidadVertical.y < 0)
         {
             velocidadVertical.y = -2f;
             if (anim != null) anim.SetBool("isJumping", false);
         }
 
-        // 3. Salto (Tecla Espacio)
         if (Input.GetButtonDown("Jump") && controller.isGrounded)
         {
             velocidadVertical.y = Mathf.Sqrt(fuerzaSalto * -2f * gravedad);
             if (anim != null) anim.SetBool("isJumping", true);
         }
 
-        // 4. Recoger / Agacharse (Tecla E)
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && anim != null)
         {
-            if (anim != null) anim.SetTrigger("pickup");
+            anim.SetTrigger("pickup");
         }
 
-        // 5. Gravedad
         velocidadVertical.y += gravedad * Time.deltaTime;
         controller.Move(velocidadVertical * Time.deltaTime);
 
-        // 6. Movimiento WASD / Flechas
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direccion = new Vector3(horizontal, 0f, vertical).normalized;
@@ -68,15 +103,13 @@ public class PlayerController : MonoBehaviour
         bool estaMoviendose = direccion.magnitude >= 0.1f;
         bool estaCorriendo = estaMoviendose && Input.GetKey(KeyCode.LeftShift);
 
-        // 7. Enviar estados al Animator
         if (anim != null)
         {
             anim.SetBool("isWalking", estaMoviendose);
             anim.SetBool("isRunning", estaCorriendo);
         }
 
-        // 8. Aplicar Desplazamiento
-        if (estaMoviendose)
+        if (estaMoviendose && camara != null)
         {
             float anguloObjetivo = Mathf.Atan2(direccion.x, direccion.z) * Mathf.Rad2Deg + camara.eulerAngles.y;
             float angulo = Mathf.SmoothDampAngle(transform.eulerAngles.y, anguloObjetivo, ref velocidadRotacionDeseada, tiempoSuavizadoRotacion);
@@ -89,12 +122,75 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Método para activar la muerte desde cualquier evento o enemigo
+    // Método para abrir y cerrar el inventario al pulsar la tecla o clic en un botón de mochila
+    public void ToggleInventario()
+    {
+        if (panelInventarioUI != null)
+        {
+            bool estadoActual = panelInventarioUI.activeSelf;
+            panelInventarioUI.SetActive(!estadoActual);
+        }
+    }
+
+    public void RecibirDano(int cantidad)
+    {
+        if (estaMuerto) return;
+
+        if (inventario != null)
+        {
+            inventario.vidasActuales -= cantidad;
+            if (inventario.vidasActuales < 0) inventario.vidasActuales = 0;
+
+            if (inventario.barraVidaUI != null)
+            {
+                inventario.barraVidaUI.value = inventario.vidasActuales;
+            }
+        }
+
+        // Actualiza las imágenes de la pantalla
+        ActualizarCorazonesUI();
+
+        if (inventario != null && inventario.vidasActuales <= 0)
+        {
+            Morir();
+        }
+    }
+
+    // Método seguro que verifica que los corazones no hayan sido eliminados
+    public void ActualizarCorazonesUI()
+    {
+        if (corazonesUI == null || corazonesUI.Length == 0) return;
+
+        int vidas = (inventario != null) ? inventario.vidasActuales : 0;
+
+        for (int i = 0; i < corazonesUI.Length; i++)
+        {
+            // La validación '!Equals(null)' evita el error de MissingReferenceException
+            if (corazonesUI[i] != null && !corazonesUI[i].Equals(null))
+            {
+                corazonesUI[i].SetActive(i < vidas);
+            }
+        }
+    }
+
     public void Morir()
     {
         if (estaMuerto) return;
 
         estaMuerto = true;
+
+        if (inventario != null)
+        {
+            inventario.vidasActuales = 0;
+            if (inventario.barraVidaUI != null)
+            {
+                inventario.barraVidaUI.value = 0;
+            }
+        }
+
+        // Apaga TODOS los corazones al morir
+        ActualizarCorazonesUI();
+
         if (anim != null)
         {
             anim.SetTrigger("die");

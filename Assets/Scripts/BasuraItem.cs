@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class Basuraltem : MonoBehaviour
+public class BasuraItem : MonoBehaviour
 {
     [Header("Configuración del Residuo")]
+    public string nombreItem = "Plátano";
     public string tipoResiduo = "Organico";
     public int puntosPorRecoger = 10;
 
@@ -11,7 +12,6 @@ public class Basuraltem : MonoBehaviour
 
     private void Update()
     {
-        // Si el jugador está cerca y presiona la tecla E
         if (jugadorCerca && Input.GetKeyDown(KeyCode.E))
         {
             RecogerBasura();
@@ -22,9 +22,24 @@ public class Basuraltem : MonoBehaviour
     {
         if (inventarioJugador != null)
         {
-            inventarioJugador.AgregarResiduo(tipoResiduo);
-            inventarioJugador.MostrarFeedback("+" + puntosPorRecoger + " PUNTOS", Color.yellow);
-            Destroy(gameObject);
+            bool exito = inventarioJugador.AgregarResiduo(nombreItem, tipoResiduo, puntosPorRecoger);
+
+            if (exito)
+            {
+                // Avisa al GameManager para que sume puntos, haga sonar el audio y muestre el texto
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.RecogerBasura();
+                }
+
+                Animator anim = inventarioJugador.GetComponentInChildren<Animator>();
+                if (anim != null)
+                {
+                    anim.SetTrigger("pickup");
+                }
+
+                Destroy(gameObject);
+            }
         }
     }
 

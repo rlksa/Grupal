@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class EnemigoIA : MonoBehaviour
 {
@@ -8,57 +9,94 @@ public class EnemigoIA : MonoBehaviour
     public Transform jugador;
     public float rangoDeteccion = 8f; // Distancia a la que te empieza a seguir
 
-    [Header("Configuración del Sistema de Vidas")]
-    public int vidas = 3;
+    [Header("Ataque y Cooldown")]
     private float tiempoSiguienteAtaque = 0f;
-    private float cooldownAtaque = 1.5f; // Espera 1.5s entre golpe y golpe
+    public float cooldownAtaque = 1.5f; // Espera 1.5s entre golpe y golpe
 
     private NavMeshAgent agent;
+    private Animator anim;
+    private bool juegoTerminado = false;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
+        if (juegoTerminado) return;
+
         if (jugador != null && agent != null && agent.isOnNavMesh)
         {
-            // Calcula la distancia entre el enemigo y el jugador
             float distancia = Vector3.Distance(transform.position, jugador.position);
 
             if (distancia <= rangoDeteccion)
             {
-                // Si está dentro del rango, persigue al jugador
                 agent.SetDestination(jugador.position);
+                if (anim != null) anim.SetBool("isWalking", true);
             }
             else
             {
-                // Si sale del rango, se detiene
                 agent.ResetPath();
+                if (anim != null) anim.SetBool("isWalking", false);
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Detecta si choca con el robot y si ya pasó el tiempo de espera
+        if (juegoTerminado) return;
+
+        // Detecta si choca con el jugador
         if (other.CompareTag("Player") && Time.time >= tiempoSiguienteAtaque)
         {
-            vidas--;
             tiempoSiguienteAtaque = Time.time + cooldownAtaque;
 
-            Debug.Log("¡El enemigo te golpeó! Vidas restantes: " + vidas);
-
-            if (vidas <= 0)
+            // Busca el script PlayerController en el objeto o sus padres
+            PlayerController playerScript = other.GetComponentInParent<PlayerController>();
+            if (playerScript == null)
             {
-                Debug.Log("¡Has perdido todas las vidas! Reiniciando...");
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                playerScript = other.GetComponent<PlayerController>();
+            }
+
+            if (playerScript != null)
+            {
+                // Le resta 1 corazón/vida al Player a través de su script
+                playerScript.RecibirDano(1);
+
+                // Si el jugador se quedó sin vidas tras este golpe
+                if (playerScript.inventario != null && playerScript.inventario.vidasActuales <= 0)
+                {
+                    juegoTerminado = true;
+                    StartCoroutine(ReiniciarPartida());
+                }
             }
         }
     }
 
-    // Dibuja una esfera roja en el editor para que veas el rango visualmente
+    private IEnumerator ReiniciarPartida()
+    {
+        // Detiene al enemigo
+        if (agent != null && agent.isOnNavMesh) agent.ResetPath();
+        if (anim != null) anim.SetBool("isWalking", false);
+
+        // Espera 2.5 segundos para la animación de muerte
+        yield return new WaitForSeconds(2.5f);
+
+        // Busca el GameManager para desplegar el PanelGameOver
+        GameManager gm = FindObjectOfType<GameManager>();
+        if (gm != null)
+        {
+            gm.RecibirDano(3); // Activa el Game Over y pausa el juego
+        }
+        else
+        {
+            // Respaldo por si no encuentra el GameManager
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
