@@ -18,9 +18,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("Conexión con Inventario y UI")]
     public EcoBotInventario inventario;
-    public GameObject[] corazonesUI;   // Arrastra aquí los 3 corazones
-    public GameObject panelInventarioUI; // Arrastra aquí el panel que contiene los 3 slots de abajo
-    public KeyCode teclaInventario = KeyCode.I; // Tecla para abrir y cerrar el inventario
+    public GameObject[] corazonesUI;   // HUD viejo (ya no hace falta, pero no lo borres)
+    public GameObject panelInventarioUI; // HUD viejo (ya no hace falta, pero no lo borres)
+    public KeyCode teclaInventario = KeyCode.I; // Tecla para mostrar/ocultar la mochila
 
     private Animator anim;
     private bool estaMuerto = false;
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
 
         ActualizarCorazonesUI();
 
-        // El inventario inicia oculto
+        // El panel viejo inicia oculto (el HUD nuevo ya tiene su propia mochila)
         if (panelInventarioUI != null)
         {
             panelInventarioUI.SetActive(false);
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
     {
         if (estaMuerto || controller == null) return;
 
-        // Abrir / Cerrar el inventario
+        // Mostrar / ocultar la mochila
         if (Input.GetKeyDown(teclaInventario))
         {
             ToggleInventario();
@@ -122,9 +122,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Método para abrir y cerrar el inventario al pulsar la tecla o clic en un botón de mochila
+    // Muestra u oculta la mochila (tecla I)
     public void ToggleInventario()
     {
+        if (HUDJuego.Instance != null)
+        {
+            HUDJuego.Instance.ToggleInventario();
+            return;
+        }
+
+        // Respaldo: panel viejo
         if (panelInventarioUI != null)
         {
             bool estadoActual = panelInventarioUI.activeSelf;

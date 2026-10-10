@@ -26,7 +26,7 @@ public class BasuraItem : MonoBehaviour
 
             if (exito)
             {
-                // Avisa al GameManager para que sume puntos, haga sonar el audio y muestre el texto
+                // Avisa al GameManager para que sume puntos y haga sonar el audio
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.RecogerBasura();
@@ -37,6 +37,9 @@ public class BasuraItem : MonoBehaviour
                 {
                     anim.SetTrigger("pickup");
                 }
+
+                // Ya no hay nada que recoger: esconde el cartelito
+                if (HUDJuego.Instance != null) HUDJuego.Instance.OcultarPrompt();
 
                 Destroy(gameObject);
             }
@@ -49,6 +52,12 @@ public class BasuraItem : MonoBehaviour
         {
             jugadorCerca = true;
             inventarioJugador = other.GetComponent<EcoBotInventario>();
+
+            // Cartelito con el nombre del objeto
+            if (HUDJuego.Instance != null)
+            {
+                HUDJuego.Instance.MostrarPrompt("E", "Recoger: " + nombreItem);
+            }
         }
     }
 
@@ -58,6 +67,8 @@ public class BasuraItem : MonoBehaviour
         {
             jugadorCerca = false;
             inventarioJugador = null;
+
+            if (HUDJuego.Instance != null) HUDJuego.Instance.OcultarPrompt();
         }
     }
 }

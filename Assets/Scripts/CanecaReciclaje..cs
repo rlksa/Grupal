@@ -28,7 +28,7 @@ public class CanecaReciclaje : MonoBehaviour
             {
                 inventarioJugador.DepositarResiduo(tipoLimpio);
 
-                // Dispara el aviso verde ¡CORRECTO! +10 y actualiza puntos en UI
+                // Suma puntos (+50) y suena el audio
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.DepositarResiduo(true);
@@ -42,7 +42,7 @@ public class CanecaReciclaje : MonoBehaviour
             // Caso 3: Lleva residuos pero ninguno corresponde a esta caneca
             else
             {
-                // Dispara el aviso rojo ¡INCORRECTO! -50 y resta puntos en UI
+                // Aviso rojo ¡INCORRECTO! -50
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.DepositarResiduo(false);
@@ -58,7 +58,12 @@ public class CanecaReciclaje : MonoBehaviour
             jugadorCerca = true;
             inventarioJugador = other.GetComponent<EcoBotInventario>();
 
-            if (inventarioJugador != null)
+            if (HUDJuego.Instance != null)
+            {
+                // Cartelito fijo mientras estés cerca de la caneca
+                HUDJuego.Instance.MostrarPrompt("E", "Depositar en: " + nombreCaneca);
+            }
+            else if (inventarioJugador != null)
             {
                 inventarioJugador.MostrarFeedback("[" + nombreCaneca + "] Presiona E para depositar", Color.white);
             }
@@ -71,6 +76,8 @@ public class CanecaReciclaje : MonoBehaviour
         {
             jugadorCerca = false;
             inventarioJugador = null;
+
+            if (HUDJuego.Instance != null) HUDJuego.Instance.OcultarPrompt();
         }
     }
 }

@@ -2883,8 +2883,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
-  tipoResiduo: Plastico
+  nombreItem: Vaso de papel
+  tipoResiduo: Vidrio
   puntosPorRecoger: 10
 --- !u!65 &242049712
 BoxCollider:
@@ -4215,7 +4215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Zanahoria
   tipoResiduo: Organico
   puntosPorRecoger: 10
 --- !u!65 &350505802
@@ -4393,7 +4393,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Restos de col
   tipoResiduo: Organico
   puntosPorRecoger: 10
 --- !u!65 &356952015
@@ -6021,7 +6021,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Envase de salsa
   tipoResiduo: Plastico
   puntosPorRecoger: 10
 --- !u!1001 &497577820
@@ -8313,8 +8313,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
-  tipoResiduo: Plastico
+  nombreItem: Caja de carton
+  tipoResiduo: Papel
   puntosPorRecoger: 10
 --- !u!1 &735316377
 GameObject:
@@ -9231,7 +9231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Tapa de plastico
   tipoResiduo: Plastico
   puntosPorRecoger: 10
 --- !u!65 &775284821
@@ -10736,7 +10736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f90029f5d7aa7d24997f3a0f0326c933, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.7523713
+      value: -2.6289
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f90029f5d7aa7d24997f3a0f0326c933, type: 3}
       propertyPath: m_LocalPosition.z
@@ -11722,7 +11722,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Restos de huevo
   tipoResiduo: Organico
   puntosPorRecoger: 10
 --- !u!65 &1034085401
@@ -11826,7 +11826,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Vaso de plastico
   tipoResiduo: Plastico
   puntosPorRecoger: 10
 --- !u!65 &1041944785
@@ -12707,7 +12707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Pan
   tipoResiduo: Organico
   puntosPorRecoger: 10
 --- !u!65 &1153734892
@@ -13946,6 +13946,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   textoPuntosAsset: {fileID: 1194274202}
   panelGameOver: {fileID: 361109449}
+  textoPuntosGameOver: {fileID: 0}
+  textoRecordGameOver: {fileID: 0}
+  panelVictoria: {fileID: 0}
+  textoPuntosVictoria: {fileID: 0}
+  textoRecordVictoria: {fileID: 0}
+  estrellasVictoria: []
+  puntosParaGanar: 500
   vidasMaximas: 3
   puntos: 0
 --- !u!4 &1232664553
@@ -14228,8 +14235,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
-  tipoResiduo: Plastico
+  nombreItem: Caja de carton
+  tipoResiduo: Papel
   puntosPorRecoger: 10
 --- !u!4 &1261362081 stripped
 Transform:
@@ -14360,8 +14367,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
-  tipoResiduo: Plastico
+  nombreItem: Caja de carton
+  tipoResiduo: Papel
   puntosPorRecoger: 10
 --- !u!1 &1273511180
 GameObject:
@@ -15272,8 +15279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
-  tipoResiduo: Plastico
+  nombreItem: Caja de carton
+  tipoResiduo: Papel
   puntosPorRecoger: 10
 --- !u!1001 &1353911031
 PrefabInstance:
@@ -16132,7 +16139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Lata de aluminio
   tipoResiduo: Plastico
   puntosPorRecoger: 10
 --- !u!65 &1415219943
@@ -17936,7 +17943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: ' Soda'
+  nombreItem: Lata de aluminio
   tipoResiduo: Plastico
   puntosPorRecoger: 10
 --- !u!65 &1577478191
@@ -19453,7 +19460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Restos de col
   tipoResiduo: Organico
   puntosPorRecoger: 10
 --- !u!65 &1726046872
@@ -20713,8 +20720,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
-  tipoResiduo: Plastico
+  nombreItem: Caja de carton
+  tipoResiduo: Papel
   puntosPorRecoger: 10
 --- !u!1001 &1860828375
 PrefabInstance:
@@ -21417,8 +21424,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
-  tipoResiduo: Plastico
+  nombreItem: Vaso de papel
+  tipoResiduo: Papel
   puntosPorRecoger: 10
 --- !u!65 &1930509872
 BoxCollider:
@@ -22466,7 +22473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87259f93583300f459fd1f8ecad84aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Basuraltem
-  nombreItem: "Pl\xE1tano"
+  nombreItem: Manzana
   tipoResiduo: Organico
   puntosPorRecoger: 10
 --- !u!65 &2027854402

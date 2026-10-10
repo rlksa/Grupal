@@ -25,11 +25,11 @@ public class EcoBotInventario : MonoBehaviour
     public Slider barraVidaUI;
     private bool esInmunidad = false;
 
-    [Header("Referencias UI TextMeshPro")]
+    [Header("Referencias UI TextMeshPro (HUD viejo - ya no hace falta)")]
     public TextMeshProUGUI textoFeedbackUI;
     public TextMeshProUGUI textoPuntos;
 
-    [Header("Slots del Inventario (Máx 3)")]
+    [Header("Slots del Inventario (HUD viejo - ya no hace falta)")]
     public TextMeshProUGUI textoSlot1;
     public TextMeshProUGUI textoSlot2;
     public TextMeshProUGUI textoSlot3;
@@ -56,18 +56,20 @@ public class EcoBotInventario : MonoBehaviour
         ActualizarHUD();
     }
 
-    // Agregar basura respetando el límite de 3 espacios
+    // Agregar basura respetando el límite de espacios
     public bool AgregarResiduo(string nombre, string categoria, int puntos)
     {
         if (listaInventario.Count >= limiteInventario)
         {
-            MostrarFeedback("¡INVENTARIO LLENO! (3/3)", Color.red);
+            MostrarFeedback("¡MOCHILA LLENA! (" + limiteInventario + "/" + limiteInventario + ")", Color.red);
             return false;
         }
 
         listaInventario.Add(new ItemResiduo(nombre, categoria.Trim()));
         puntosTotales += puntos;
-        MostrarFeedback("+ " + nombre.ToUpper() + " (" + puntos + " PTS)", Color.yellow);
+
+        // Aviso con el NOMBRE del objeto recogido
+        MostrarFeedback("RECOGISTE: " + nombre.ToUpper(), new Color(1f, 0.9f, 0.3f, 1f));
         ActualizarHUD();
         return true;
     }
@@ -95,14 +97,14 @@ public class EcoBotInventario : MonoBehaviour
             string nombreEntregado = listaInventario[index].nombreMostrado;
             listaInventario.RemoveAt(index);
             puntosTotales += 50;
-            MostrarFeedback("¡ENTREGADO: " + nombreEntregado.ToUpper() + "! (+50 PTS)", Color.green);
+            MostrarFeedback("¡ENTREGADO: " + nombreEntregado.ToUpper() + "!", Color.green);
             ActualizarHUD();
             return true;
         }
         return false;
     }
 
-    // Penalización por tirar en tacho equivocado (-20 pts)
+    // Penalización por tirar en tacho equivocado
     public void RestarPuntos(int cantidad)
     {
         puntosTotales -= cantidad;
@@ -144,7 +146,7 @@ public class EcoBotInventario : MonoBehaviour
         esInmunidad = false;
     }
 
-    // Actualiza los textos de los 3 slots con el Nombre del ítem
+    // Mantiene también los textos del HUD viejo (por si lo vuelves a activar)
     public void ActualizarHUD()
     {
         if (textoPuntos != null)
@@ -159,6 +161,14 @@ public class EcoBotInventario : MonoBehaviour
 
     public void MostrarFeedback(string mensaje, Color colorTexto)
     {
+        // Si existe el HUD nuevo, el aviso sale ahí con diseño
+        if (HUDJuego.Instance != null)
+        {
+            HUDJuego.Instance.MostrarMensaje(mensaje, colorTexto);
+            return;
+        }
+
+        // Respaldo: HUD viejo
         if (textoFeedbackUI == null) return;
 
         if (corrutinaFeedback != null)
